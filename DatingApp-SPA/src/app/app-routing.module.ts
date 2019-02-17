@@ -8,12 +8,21 @@ import { MemberListComponent } from './members/member-list/member-list.component
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { MemberDetailResolver } from './_resolver/member-detail.resolver';
 import { MemberListResolver } from './_resolver/member-list.resolver.';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { MemberEditResolver } from './_resolver/member-edit.resolver';
+import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'members', component: MemberListComponent, canActivate: [AuthGuard], resolve: { users: MemberListResolver } },
-  { path: 'members/:id', component: MemberDetailComponent, canActivate: [AuthGuard],
-   resolve: { user: MemberDetailResolver } },
+  {
+    path: 'members/:id', component: MemberDetailComponent, canActivate: [AuthGuard],
+    resolve: { user: MemberDetailResolver }
+  },
+  {
+    path: 'member/edit', component: MemberEditComponent, canActivate: [AuthGuard], resolve: { user: MemberEditResolver },
+    canDeactivate: [PreventUnsavedChanges]
+  },
   { path: 'messages', component: MessagesComponent, canActivate: [AuthGuard] },
   { path: 'lists', component: ListsComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '', pathMatch: 'full' } // Hiçbiri ile eşleşmezse home sayfasına git. En sonda olmalı
