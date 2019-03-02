@@ -16,6 +16,7 @@ import { ListsComponent } from './lists/lists.component';
 import { MessagesComponent } from './messages/messages.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { UserService } from './_services/user.service';
+import {TimeAgoPipe} from 'time-ago-pipe';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { JwtModule } from '@auth0/angular-jwt';
@@ -41,6 +42,7 @@ export function tokenGetter() {
     HomeComponent,
     RegisterComponent,
     MemberListComponent,
+    TimeAgoPipe,
     ListsComponent,
     MessagesComponent,
     MemberCardComponent,

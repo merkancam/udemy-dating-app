@@ -18,6 +18,8 @@ import {
   FormBuilder
 } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap';
+import { User } from '../_models/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -27,10 +29,13 @@ import { BsDatepickerConfig } from 'ngx-bootstrap';
 export class RegisterComponent implements OnInit {
   @Output() cancelRegister = new EventEmitter();
 
-  model: any = {};
+  user: User;
   registerForm: FormGroup;
-  bsConfig : Partial<BsDatepickerConfig>;
-  constructor(private authService: AuthService, private alertify: AlertifyService, private fb: FormBuilder) {}
+  bsConfig: Partial<BsDatepickerConfig>;
+  constructor(private authService: AuthService,
+    private alertify: AlertifyService,
+    private fb: FormBuilder,
+    private router: Router) { }
 
   ngOnInit() {
     // this.registerForm = new FormGroup({
@@ -38,27 +43,27 @@ export class RegisterComponent implements OnInit {
     //   password: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]),
     //   confirmPassword: new FormControl('', Validators.required),
     // }, this.passwordMatchValidator);
-this.bsConfig = {
-containerClass : "theme-red",
+    this.bsConfig = {
+      containerClass: 'theme-red',
 
-};
+    };
     this.createRegisterForm();
   }
 
 
   createRegisterForm() {
     this.registerForm = this.fb.group({
-      gender : ['male'],
+      gender: ['male'],
       username: ['', Validators.required],
-      knownAs : ['',Validators.required],
-      city : ['',Validators.required],
-      dateOfBirth : [null,Validators.required],
-      country : ['',Validators.required],
+      knownAs: ['', Validators.required],
+      city: ['', Validators.required],
+      dateOfBirth: [null, Validators.required],
+      country: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
       confirmPassword: ['', Validators.required]
     }, {
-      validator: this.passwordMatchValidator
-    });
+        validator: this.passwordMatchValidator
+      });
   }
 
 
@@ -75,7 +80,20 @@ containerClass : "theme-red",
     //   this.alertify.error(error);
     // });
 
-    console.log(this.registerForm.value);
+    if (!this.registerForm.valid) {
+      return;
+    }
+
+    this.user = Object.assign({}, this.registerForm.value);
+    this.authService.register(this.user).subscribe(() => {
+      this.alertify.success('Registration Successfull');
+    }, error => {
+      this.alertify.error(error);
+    }, () => {
+      this.authService.login(this.user).subscribe(() => {
+        this.router.navigate(['/members']);
+      });
+    });
   }
 
   cancel() {
