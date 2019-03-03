@@ -30,7 +30,7 @@ export class AuthService {
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', JSON.stringify(response.user));
         this.decodedToken = this.jwtHelper.decodeToken(response.token);
-        this.changeMemberPhoto(this.currentUser.photoUrl);
+        this.changeMemberPhoto(response.user.photoUrl);
       }
     }));
 
