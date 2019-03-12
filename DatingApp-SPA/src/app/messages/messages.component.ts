@@ -5,6 +5,7 @@ import { UserService } from '../_services/user.service';
 import { AuthService } from '../_services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { AlertifyService } from '../_services/alertify.service';
+import { TypeaheadOptions } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-messages',
@@ -27,6 +28,15 @@ export class MessagesComponent implements OnInit {
     });
   }
 
+  deleteMessage(id: number) {
+    this.alertify.confirm('Are you sure ?', () => {
+      this.userService.deleteMessage(id, this.authService.decodedToken.nameid).subscribe(() => {
+        this.messages.splice(this.messages.findIndex(m => m.id === id), 1);
+      }, error => {
+        this.alertify.error('Failed to delete');
+      });
+    })
+  }
 
 
   loadMessages() {
